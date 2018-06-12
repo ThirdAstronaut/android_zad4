@@ -5,17 +5,8 @@ public class Song {
     private String mTitle;
     private String mAuthor;
     private String mDuration;
-    private String mAssetPath;
 
-    public Song(Long id, String title, String author, String duration, String assetPath) {
-        mId = id;
-        mTitle = title;
-        mAuthor = author;
-        mDuration = duration;
-        mAssetPath = assetPath;
-    }
-
-    public Song(Long id, String title, String author, String duration) {
+    Song(Long id, String title, String author, String duration) {
         mTitle = title;
         mAuthor = author;
         mDuration = duration;
@@ -32,10 +23,6 @@ public class Song {
 
     public String getDuration() {
         return mDuration;
-    }
-
-    public String getAssetPath() {
-        return mAssetPath;
     }
 
     public Long getId() {

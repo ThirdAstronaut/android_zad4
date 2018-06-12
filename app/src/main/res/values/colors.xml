@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#dbf6d2</color>
+    <color name="colorUpper">#6f8c65</color>
+    <color name="colorPrimaryBottom">#adc1a6</color>
+    <color name="listDark">#454d43</color>
+    <color name="listDarkBottom">#363c34</color>
+    <color name="listLight">#9dae9a</color>
+    <color name="colorUpperBar">#094675</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="myCustomDarkFontColor">#221e1e</color>
+    <color name="myCustomFontColor">#dad657</color>
 </resources>

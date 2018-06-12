@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,79 +22,114 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MusicService musicSrv;
+    private static MusicService musicSrv;
     private Intent playIntent;
-    private boolean musicBound = false;
     private RecyclerView mRecyclerView;
-    private CustomAdapter mAdapter;
+    private ConstraintLayout mPlayerConstraintLayout;
 
+    private  CustomAdapter adapter;
 
-    private TextView titleTextView;
     private TextView songTitleTextView;
-    private TextView authorTextView;
-    private TextView durationTimeSongRow;
-    private Button startButtonSongRow;
     private ImageButton backArrowButton;
     private ImageButton playArrowButton;
     private ImageButton forwardArrowButton;
 
+    private static String currentSongName;
+    private static String currentTheme = "Light";
+
+    private static Long currentID;
+
+
+    public static void start(Context context, String theme) {
+
+        Intent starter = new Intent(context, MainActivity.class);
+        starter.putExtra("currentTheme", theme);
+        context.startActivity(starter);
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState != null) {
+            currentID = savedInstanceState.getLong("songID");
+            currentSongName = savedInstanceState.getString("songName");
+            currentTheme = savedInstanceState.getString("currentTheme");
+        }
 
+        if (getIntent().getStringExtra("currentTheme") != null) {
+            currentTheme = getIntent().getStringExtra("currentTheme");
+        }
 
-
-
-        mAdapter = new CustomAdapter();
+        songTitleTextView = findViewById(R.id.songTitleTextView);
+        backArrowButton = findViewById(R.id.backArrowButton);
+        forwardArrowButton = findViewById(R.id.forwardArrowButton);
+        playArrowButton = findViewById(R.id.playButton);
+        adapter = new CustomAdapter();
         mRecyclerView = findViewById(R.id.recyclerView);
+        mPlayerConstraintLayout = findViewById(R.id.playerLayout);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(adapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        ItemTouchHelper.Callback callback = new SwipeHelper(mAdapter);
+        ItemTouchHelper.Callback callback = new SwipeHelper(adapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecyclerView);
 
-        songTitleTextView = findViewById(R.id.songTitleTextView);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("song-changed"));
 
-        backArrowButton = findViewById(R.id.backArrowButton);
-        forwardArrowButton = findViewById(R.id.forwardArrowButton);
-        playArrowButton = findViewById(R.id.playButton);
 
         forwardArrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                musicSrv.seek(musicSrv.getPosn() + 10000);
+                musicSrv.seek(musicSrv.getPosition() + 10000);
             }
         });
 
         backArrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                musicSrv.seek(musicSrv.getPosn() -10000);
+                musicSrv.seek(musicSrv.getPosition() - 10000);
             }
         });
 
-playArrowButton.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        if(musicSrv.isPng()){
-            musicSrv.pausePlayer();
-        } else
-            musicSrv.go();
+        playArrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (musicSrv.isPlaying()) {
+                    musicSrv.pausePlayer();
+                } else
+                    musicSrv.go();
+            }
+        });
+        setTheme();
+
+        if (currentSongName != null)
+            songTitleTextView.setText(currentSongName);
+
+
     }
-});
+
+
+    protected void onSaveInstanceState(Bundle bundle) {
+        if (currentSongName != null && currentID != null) {
+            bundle.putString("songName", currentSongName);
+            bundle.putString("currentTheme", currentTheme);
+            bundle.putLong("songID", currentID);
+
+        }
+        super.onSaveInstanceState(bundle);
     }
 
 
@@ -102,13 +138,36 @@ playArrowButton.setOnClickListener(new View.OnClickListener() {
         @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onReceive(Context context, Intent intent) {
-        String currentSongName = intent.getStringExtra("SongName");
-        Long currentID = intent.getLongExtra("SongID", 0);
+            if (musicSrv.isPlaying()) {
+                musicSrv.pausePlayer();
+                musicSrv.reset();
+            }
+            currentSongName = intent.getStringExtra("SongName");
+            currentID = intent.getLongExtra("SongID", 0);
             songTitleTextView.setText(currentSongName);
             musicSrv.setSong(Math.toIntExact(currentID));
             musicSrv.playSong();
         }
     };
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setTheme() {
+        if (currentTheme == null || currentTheme.equals("Light")) {
+            mPlayerConstraintLayout.setBackgroundResource(R.color.listLight);
+            songTitleTextView.setTextColor(getResources().getColor(R.color.myCustomDarkFontColor, null));
+            mRecyclerView.setBackgroundResource(R.color.colorPrimaryBottom);
+        } else {
+            mPlayerConstraintLayout.setBackgroundResource(R.color.listDarkBottom);
+            songTitleTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+            mRecyclerView.setBackgroundResource(R.color.listDark);
+            playArrowButton.setBackgroundResource(R.color.listDarkBottom);
+            backArrowButton.setBackgroundResource(R.color.listDarkBottom);
+            forwardArrowButton.setBackgroundResource(R.color.listDarkBottom);
+        }
+        adapter.setCurrentTheme(currentTheme);
+
+    }
 
     private ServiceConnection musicConnection = new ServiceConnection() {
 
@@ -116,23 +175,14 @@ playArrowButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            //get service
             musicSrv = binder.getService();
-            //pass list
-            musicSrv.setList(SongsKeeper.getInstance().getMusicList());
-            musicBound = true;
+            musicSrv.setList(SongsKeeper.getSongsList());
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            musicBound = false;
         }
     };
-
-    public void songPicked(View view) {
-        musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        musicSrv.playSong();
-    }
 
     @Override
     protected void onStart() {
@@ -163,12 +213,9 @@ playArrowButton.setOnClickListener(new View.OnClickListener() {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about_menu:
-                startActivity(new Intent(this, AboutActivity.class));
+                AboutActivity.start(getApplicationContext(), currentTheme);
                 break;
             case R.id.settings_menu:
-               /* stopService(playIntent);
-                musicSrv = null;
-                System.exit(0);*/
                 startActivity(new Intent(this, SettingsActivity.class));
 
                 break;
@@ -177,6 +224,8 @@ playArrowButton.setOnClickListener(new View.OnClickListener() {
     }
 
 
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

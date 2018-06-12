@@ -3,6 +3,7 @@ package lab.swim.pwr.android_zad4;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
+    private String currentTheme = "Light";
+
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTextView;
         private TextView authorTextView;
@@ -28,12 +32,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             authorTextView = v.findViewById(R.id.authorTextView);
             durationTimeTextView = v.findViewById(R.id.durationTimeTextView);
             startButtonSongRow = v.findViewById(R.id.startButtonSongsRow);
-
-
         }
     }
 
-    Context ctx;
+    private Context ctx;
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,8 +48,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(CustomAdapter.ViewHolder holder, int position) {
-        final Song song = SongsKeeper.getInstance().getMusicList().get(position);
+    public void onBindViewHolder(@NonNull final CustomAdapter.ViewHolder holder, int position) {
+        final Song song = SongsKeeper.getSongsList().get(position);
         holder.titleTextView.setText(song.getTitle());
         holder.authorTextView.setText(song.getAuthor());
         holder.durationTimeTextView.setText(song.getDuration());
@@ -59,30 +62,53 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 intent.putExtra("SongID", song.getId());
                 LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
 
+
             }
         });
 
-    }
+        if (!(currentTheme == null || currentTheme.equals("Light"))) {
+            /*         layout.setBackgroundResource(R.color.listDarkBottom);
+            authorNameTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+            descriptionTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                                playRandomSong.setTextColor(Color.parseColor("#9dae9a"));
+
+   */
+            holder.titleTextView.setTextColor(Color.parseColor("#dbf6d2"));
+            holder.durationTimeTextView.setTextColor(Color.parseColor("#dbf6d2"));
+            holder.authorTextView.setTextColor(Color.parseColor("#dbf6d2"));
+            holder.startButtonSongRow.setBackgroundResource(R.color.listDark);
+            holder.startButtonSongRow.setTextColor(Color.parseColor("#9dae9a"));
+            }
+        }
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public int getCount() {
-        return SongsKeeper.getInstance().getMusicList().size();
+        return SongsKeeper.getSongsList().size();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public Song getItemAtPosition(int position) {
-        return SongsKeeper.getInstance().getMusicList().get(position);
+        return SongsKeeper.getSongsList().get(position);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public int getItemCount() {
-        return SongsKeeper.getInstance().getMusicList().size();
+        return SongsKeeper.getSongsList().size();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void removeItem(int id) {
-        SongsKeeper.getInstance().getMusicList().remove(id);
+        SongsKeeper.getSongsList().remove(id);
         this.notifyItemRemoved(id);
+    }
+
+    public  String getCurrentTheme() {
+        return currentTheme;
+    }
+
+    public void setCurrentTheme(String currentTheme) {
+        this.currentTheme = currentTheme;
     }
 }

@@ -9,5 +9,9 @@
     <string name="forward_arrow_string">forward arrow</string>
     <string name="play_button_string">play button</string>
     <string name="author_name_string">Rafał Lechowicz</string>
-    <string name="lorem_ipsum_string">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus et ipsum faucibus elementum. Nulla ut volutpat est, sed molestie orci. Phasellus commodo, eros vitae sollicitudin tempus, leo sapien eleifend ipsum, et maximus metus sem nec risus. Nam cursus massa sed libero viverra viverra. Mauris sollicitudin accumsan sem, et condimentum elit pellentesque eget. Sed rhoncus est ut nisi commodo, eget varius enim tincidunt. Praesent rhoncus nibh et augue venenatis volutpat. Sed tortor orci, viverra non molestie sit amet, pellentesque eget quam. Pellentesque blandit quis lorem ut hendrerit. Donec fringilla, justo id fringilla imperdiet, lectus tortor interdum leo, nec accumsan elit massa eu felis.</string>
+    <string name="lorem_ipsum_string">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus et ipsum faucibus elementum. Nulla ut volutpat est, sed molestie orci. Phasellus commodo, eros vitae sollicitudin tempus, leo sapien eleifend ipsum, et maximus metus sem nec risus. Nam cursus massa sed libero viverra. Mauris sollicitudin accumsan sem, et condimentum elit pellentesque eget. Sed rhoncus est ut nisi commodo, eget varius enim tincidunt. Praesent rhoncus nibh et augue venenatis volutpat. Sed tortor orci, viverra non molestie sit amet, pellentesque eget quam. Pellentesque blandit quis lorem ut hendrerit. Donec fringilla, justo id fringilla imperdiet, lectus tortor interdum leo, nec accumsan elit massa eu felis.</string>
+    <string name="night_mode_string">Night Mode</string>
+    <string name="play_string">Play</string>
+    <string name="play_whole_list_string">Play whole list</string>
+    <string name="play_random_song">Play random song</string>
 </resources>

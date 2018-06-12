@@ -20,20 +20,20 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
 
-    private boolean shuffle=false;
+    private boolean shuffle = false;
     private Random rand;
 
     private MediaPlayer player;
     //song list
     private List<Song> songs;
     //current position
-    private int songPosn;
+    private static int songPosn;
     private final IBinder musicBind = new MusicBinder();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void onCreate() {
         super.onCreate();
-        rand=new Random();
+        rand = new Random();
         songPosn = 0;
         player = new MediaPlayer();
         initMusicPlayer();
@@ -64,12 +64,11 @@ public class MusicService extends Service implements
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-mediaPlayer.start();
+        mediaPlayer.start();
     }
 
     public void initMusicPlayer() {
-        player.setWakeMode(getApplicationContext(),
-                PowerManager.PARTIAL_WAKE_LOCK);
+        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
@@ -81,8 +80,8 @@ mediaPlayer.start();
         this.songs = songs;
     }
 
-    public void setSong(int songIndex){
-        songPosn=songIndex;
+    public void setSong(int songIndex) {
+        songPosn = songIndex;
     }
 
     public class MusicBinder extends Binder {
@@ -94,14 +93,13 @@ mediaPlayer.start();
     public void playSong() {
         player.reset();
         Song playSong = songs.get(songPosn);
-//get id
         long currSong = playSong.getId();
-//set uri
-        Uri trackUri =  Uri.parse("android.resource://lab.swim.pwr.android_zad4/raw/aa"+currSong);
+
+        Uri trackUri = Uri.parse("android.resource://lab.swim.pwr.android_zad4/raw/aa" + currSong);
 
 
         try {
-            player.setDataSource(getApplicationContext(),trackUri);
+            player.setDataSource(getApplicationContext(), trackUri);
         } catch (Exception e) {
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
@@ -109,46 +107,28 @@ mediaPlayer.start();
         player.prepareAsync();
     }
 
-    public void setShuffle(){
-        shuffle = !shuffle;
+    public void reset() {
+        player.reset();
     }
 
-    public void playNext(){
-        if(shuffle){
-            int newSong = songPosn;
-            while(newSong==songPosn){
-                newSong=rand.nextInt(songs.size());
-            }
-            songPosn=newSong;
-        }
-        else{
-            songPosn++;
-            if(songPosn>=songs.size()) songPosn=0;
-        }
-        playSong();
-    }
-
-    public int getPosn(){
+    public int getPosition() {
         return player.getCurrentPosition();
     }
 
-    public int getDur(){
-        return player.getDuration();
-    }
-
-    public boolean isPng(){
+    public boolean isPlaying() {
         return player.isPlaying();
     }
 
-    public void pausePlayer(){
+    public void pausePlayer() {
         player.pause();
     }
 
-    public void seek(int posn){
+    public void seek(int posn) {
         player.seekTo(posn);
     }
 
-    public void go(){
+    public void go() {
         player.start();
     }
+
 }

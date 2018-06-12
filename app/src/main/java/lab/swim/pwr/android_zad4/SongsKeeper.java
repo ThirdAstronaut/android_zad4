@@ -1,8 +1,5 @@
 package lab.swim.pwr.android_zad4;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,27 +7,19 @@ import java.util.List;
  * Created by Rafał on 2018-03-16.
  */
 
-public class SongsKeeper {
-    private static SongsKeeper instance = null;
-    private List<Song> mSongsList;
+class SongsKeeper {
+    private static List<Song> mSongsList;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private SongsKeeper() {
+    public static List<Song> getSongsList() {
+        String[] titles = {"Bohemian Rhapsody", "Stairway to Heaven", "Muscle Museum", "Again", "Supremacy", "Faint", "The Unforgiven", "Smoke On The Water",
+                "Nothing Else Matters", "Epitaph", "Paranoid", "Smells Like Teen Spirit", "Whiskey In The Jar", "Kashmir", "Can't Stop", "Chop Suey"};
+        String[] authors = {"Queen", "Led Zeppelin", "Muse", "Archive", "Muse", "Linkin Park", "Metallica", "Deep Purple", "King Crimson", "Black Sabbath",
+                "Nirvana", "Metallica", "Led Zeppelin", "Red Hot Chili Peppers", "System of a Down"};
+        String[] duration = {"05:56", "08:02", "04:22", "16:17", "04:55", "02:42", "06:27", "05:43", "06:30", "08:52", "02:50", "05:01", "05:04", "08:29", "04:26", "03:30"};
         mSongsList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            mSongsList.add(new Song((long) i, "Title " + i, "author "+i, i+":0"+(i%10))); /*String.valueOf(ThreadLocalRandom.current().nextInt(1000)*/;
-        }//Long id, String title, String author, String duration
-    }
-
-    public List<Song> getMusicList() {
-        return mSongsList;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static SongsKeeper getInstance() {
-        if (instance == null) {
-            instance = new SongsKeeper();
+        for (int i = 0; i < 15; i++) {
+            mSongsList.add(new Song((long) i, titles[i], authors[i], duration[i])); /*String.valueOf(ThreadLocalRandom.current().nextInt(1000)*/
         }
-        return instance;
+        return mSongsList;
     }
 }
