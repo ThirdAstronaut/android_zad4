@@ -28,29 +28,24 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private static MusicService musicSrv;
+    private static String currentSongName;
+    private static String currentTheme = "Light";
+    private static Long currentID;
+
     private Intent playIntent;
     private RecyclerView mRecyclerView;
     private ConstraintLayout mPlayerConstraintLayout;
-
-    private  CustomAdapter adapter;
-
+    private CustomAdapter adapter;
     private TextView songTitleTextView;
     private ImageButton backArrowButton;
     private ImageButton playArrowButton;
     private ImageButton forwardArrowButton;
 
-    private static String currentSongName;
-    private static String currentTheme = "Light";
-
-    private static Long currentID;
-
 
     public static void start(Context context, String theme) {
-
         Intent starter = new Intent(context, MainActivity.class);
         starter.putExtra("currentTheme", theme);
         context.startActivity(starter);
-
     }
 
 
@@ -117,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentSongName != null)
             songTitleTextView.setText(currentSongName);
-
-
     }
 
 
@@ -127,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
             bundle.putString("songName", currentSongName);
             bundle.putString("currentTheme", currentTheme);
             bundle.putLong("songID", currentID);
-
         }
         super.onSaveInstanceState(bundle);
     }
@@ -217,13 +209,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.settings_menu:
                 startActivity(new Intent(this, SettingsActivity.class));
-
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
+    
     @Override
     protected void onPause() {
         super.onPause();

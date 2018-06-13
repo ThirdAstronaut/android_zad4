@@ -18,7 +18,7 @@ class SongsKeeper {
         String[] duration = {"05:56", "08:02", "04:22", "16:17", "04:55", "02:42", "06:27", "05:43", "06:30", "08:52", "02:50", "05:01", "05:04", "08:29", "04:26", "03:30"};
         mSongsList = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            mSongsList.add(new Song((long) i, titles[i], authors[i], duration[i])); /*String.valueOf(ThreadLocalRandom.current().nextInt(1000)*/
+            mSongsList.add(new Song((long) i, titles[i], authors[i], duration[i]));
         }
         return mSongsList;
     }

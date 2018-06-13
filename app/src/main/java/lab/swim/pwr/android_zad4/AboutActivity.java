@@ -18,6 +18,7 @@ public class AboutActivity extends AppCompatActivity {
     private TextView authorNameTextView;
     private TextView descriptionTextView;
     private ConstraintLayout layout;
+
     public static void start(Context context, String theme) {
 
         Intent starter = new Intent(context, AboutActivity.class);
@@ -73,9 +74,9 @@ public class AboutActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setTheme() {
         if (currentTheme == null || currentTheme.equals("Light")) {
-        layout.setBackgroundResource(R.color.listLight);
+            layout.setBackgroundResource(R.color.listLight);
         } else {
-             layout.setBackgroundResource(R.color.listDarkBottom);
+            layout.setBackgroundResource(R.color.listDarkBottom);
             authorNameTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
             descriptionTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
         }

@@ -19,7 +19,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private String currentTheme = "Light";
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTextView;
         private TextView authorTextView;
@@ -67,30 +66,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         });
 
         if (!(currentTheme == null || currentTheme.equals("Light"))) {
-            /*         layout.setBackgroundResource(R.color.listDarkBottom);
-            authorNameTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-            descriptionTextView.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                                playRandomSong.setTextColor(Color.parseColor("#9dae9a"));
-
-   */
             holder.titleTextView.setTextColor(Color.parseColor("#dbf6d2"));
             holder.durationTimeTextView.setTextColor(Color.parseColor("#dbf6d2"));
             holder.authorTextView.setTextColor(Color.parseColor("#dbf6d2"));
             holder.startButtonSongRow.setBackgroundResource(R.color.listDark);
             holder.startButtonSongRow.setTextColor(Color.parseColor("#9dae9a"));
-            }
         }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public int getCount() {
-        return SongsKeeper.getSongsList().size();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public Song getItemAtPosition(int position) {
-        return SongsKeeper.getSongsList().get(position);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -102,10 +85,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void removeItem(int id) {
         SongsKeeper.getSongsList().remove(id);
         this.notifyItemRemoved(id);
-    }
-
-    public  String getCurrentTheme() {
-        return currentTheme;
     }
 
     public void setCurrentTheme(String currentTheme) {

@@ -37,9 +37,6 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         int dragFlags = mDraggable ? UP | DOWN | START | END : 0;
         return makeMovementFlags(dragFlags, 0);
     }
-    public void setDraggable(boolean value) {
-        mDraggable = value;
-    }
 
     @Override
     public boolean isLongPressDragEnabled() {

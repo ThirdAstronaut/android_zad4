@@ -11,30 +11,22 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
-public class MusicService extends Service implements
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
+public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
 
-    private boolean shuffle = false;
-    private Random rand;
-
     private MediaPlayer player;
-    //song list
     private List<Song> songs;
-    //current position
-    private static int songPosn;
+    private static int currentPosition;
     private final IBinder musicBind = new MusicBinder();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void onCreate() {
         super.onCreate();
-        rand = new Random();
-        songPosn = 0;
+        currentPosition = 0;
         player = new MediaPlayer();
         initMusicPlayer();
     }
@@ -54,7 +46,6 @@ public class MusicService extends Service implements
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-
     }
 
     @Override
@@ -81,7 +72,7 @@ public class MusicService extends Service implements
     }
 
     public void setSong(int songIndex) {
-        songPosn = songIndex;
+        currentPosition = songIndex;
     }
 
     public class MusicBinder extends Binder {
@@ -90,19 +81,14 @@ public class MusicService extends Service implements
         }
     }
 
-    public void playSong() {
+    public void playSong() throws IOException {
         player.reset();
-        Song playSong = songs.get(songPosn);
+        Song playSong = songs.get(currentPosition);
         long currSong = playSong.getId();
 
         Uri trackUri = Uri.parse("android.resource://lab.swim.pwr.android_zad4/raw/aa" + currSong);
 
-
-        try {
-            player.setDataSource(getApplicationContext(), trackUri);
-        } catch (Exception e) {
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
-        }
+        player.setDataSource(getApplicationContext(), trackUri);
 
         player.prepareAsync();
     }

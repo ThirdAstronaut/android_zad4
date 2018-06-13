@@ -33,12 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        nightModeSwitch = findViewById(R.id.nightModeSwitch);
-        playRandomSong = findViewById(R.id.playRandomSongButton);
-        mLayout = findViewById(R.id.settingsActivityConstraintLayout);
-
-        playRandomTextView = findViewById(R.id.playRandomSongTextView);
-        nightModeTextView = findViewById(R.id.nightModeTextView);
+        initFields();
 
         LayoutInflater li = LayoutInflater.from(this);
         View customView = li.inflate(R.layout.custom_bmi_menu_layout, null);
@@ -65,11 +60,10 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 switchChecked = !switchChecked;
-                if (getCurrentTheme().equals("Dark")) {
+                if (getCurrentTheme().equals("Dark"))
                     setDarkTheme();
-                } else {
+                 else
                     setLightTheme();
-                }
             }
         });
         nightModeSwitch.setChecked(switchChecked);
@@ -129,6 +123,13 @@ public class SettingsActivity extends AppCompatActivity {
         super.onBackPressed();
         MainActivity.start(getApplicationContext(), getCurrentTheme());
         finish();
+    }
 
+    private void initFields() {
+        nightModeSwitch = findViewById(R.id.nightModeSwitch);
+        playRandomSong = findViewById(R.id.playRandomSongButton);
+        mLayout = findViewById(R.id.settingsActivityConstraintLayout);
+        playRandomTextView = findViewById(R.id.playRandomSongTextView);
+        nightModeTextView = findViewById(R.id.nightModeTextView);
     }
 }
