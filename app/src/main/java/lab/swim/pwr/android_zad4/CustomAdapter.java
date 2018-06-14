@@ -18,6 +18,7 @@ import android.widget.TextView;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private String currentTheme = "Light";
+    private Context ctx;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTextView;
@@ -32,9 +33,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             durationTimeTextView = v.findViewById(R.id.durationTimeTextView);
             startButtonSongRow = v.findViewById(R.id.startButtonSongsRow);
         }
-    }
 
-    private Context ctx;
+    }
 
     @NonNull
     @Override
@@ -60,8 +60,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 intent.putExtra("SongName", song.getTitle());
                 intent.putExtra("SongID", song.getId());
                 LocalBroadcastManager.getInstance(ctx).sendBroadcast(intent);
-
-
             }
         });
 

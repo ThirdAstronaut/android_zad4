@@ -6,8 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
-import static android.support.v7.widget.helper.ItemTouchHelper.END;
-import static android.support.v7.widget.helper.ItemTouchHelper.START;
 import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 
 /**
@@ -29,14 +27,14 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         return true;
     }
 
-
-    private boolean mDraggable = false;
+/*
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = mDraggable ? UP | DOWN | START | END : 0;
+        int dragFlags = 0;
         return makeMovementFlags(dragFlags, 0);
     }
+*/
 
     @Override
     public boolean isLongPressDragEnabled() {

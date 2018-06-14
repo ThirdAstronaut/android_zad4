@@ -20,7 +20,6 @@ public class AboutActivity extends AppCompatActivity {
     private ConstraintLayout layout;
 
     public static void start(Context context, String theme) {
-
         Intent starter = new Intent(context, AboutActivity.class);
         starter.putExtra("currentTheme", theme);
         context.startActivity(starter);

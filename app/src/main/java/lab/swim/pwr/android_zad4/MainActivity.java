@@ -25,6 +25,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private static MusicService musicSrv;
@@ -65,49 +67,15 @@ public class MainActivity extends AppCompatActivity {
             currentTheme = getIntent().getStringExtra("currentTheme");
         }
 
-        songTitleTextView = findViewById(R.id.songTitleTextView);
-        backArrowButton = findViewById(R.id.backArrowButton);
-        forwardArrowButton = findViewById(R.id.forwardArrowButton);
-        playArrowButton = findViewById(R.id.playButton);
-        adapter = new CustomAdapter();
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mPlayerConstraintLayout = findViewById(R.id.playerLayout);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        ItemTouchHelper.Callback callback = new SwipeHelper(adapter);
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
-        helper.attachToRecyclerView(mRecyclerView);
+        initViews();
 
+        recyclerViewConfiguration();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("song-changed"));
 
+        buttonsOnClickInit();
 
-        forwardArrowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                musicSrv.seek(musicSrv.getPosition() + 10000);
-            }
-        });
-
-        backArrowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                musicSrv.seek(musicSrv.getPosition() - 10000);
-            }
-        });
-
-        playArrowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (musicSrv.isPlaying()) {
-                    musicSrv.pausePlayer();
-                } else
-                    musicSrv.go();
-            }
-        });
         setTheme();
 
         if (currentSongName != null)
@@ -138,7 +106,11 @@ public class MainActivity extends AppCompatActivity {
             currentID = intent.getLongExtra("SongID", 0);
             songTitleTextView.setText(currentSongName);
             musicSrv.setSong(Math.toIntExact(currentID));
-            musicSrv.playSong();
+            try {
+                musicSrv.playSong();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -158,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             forwardArrowButton.setBackgroundResource(R.color.listDarkBottom);
         }
         adapter.setCurrentTheme(currentTheme);
-
     }
 
     private ServiceConnection musicConnection = new ServiceConnection() {
@@ -208,14 +179,62 @@ public class MainActivity extends AppCompatActivity {
                 AboutActivity.start(getApplicationContext(), currentTheme);
                 break;
             case R.id.settings_menu:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    private void initViews() {
+        songTitleTextView = findViewById(R.id.songTitleTextView);
+        backArrowButton = findViewById(R.id.backArrowButton);
+        forwardArrowButton = findViewById(R.id.forwardArrowButton);
+        playArrowButton = findViewById(R.id.playButton);
+        adapter = new CustomAdapter();
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mPlayerConstraintLayout = findViewById(R.id.playerLayout);
+
+    }
+
+    private void recyclerViewConfiguration() {
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        ItemTouchHelper.Callback callback = new SwipeHelper(adapter);
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(mRecyclerView);
+    }
+
+    private void buttonsOnClickInit() {
+
+        forwardArrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicSrv.seek(musicSrv.getPosition() + 10000);
+            }
+        });
+
+        backArrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                musicSrv.seek(musicSrv.getPosition() - 10000);
+            }
+        });
+
+        playArrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (musicSrv.isPlaying()) {
+                    musicSrv.pausePlayer();
+                } else
+                    musicSrv.go();
+            }
+        });
     }
 }

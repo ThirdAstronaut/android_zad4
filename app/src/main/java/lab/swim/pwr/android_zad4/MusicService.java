@@ -15,8 +15,7 @@ import android.support.annotation.RequiresApi;
 import java.io.IOException;
 import java.util.List;
 
-public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+public class MusicService extends Service implements MediaPlayer.OnPreparedListener/*, MediaPlayer.OnCompletionListener */{
 
     private MediaPlayer player;
     private List<Song> songs;
@@ -45,15 +44,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        return false;
-    }
-
-    @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
     }
@@ -62,8 +52,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setOnPreparedListener(this);
-        player.setOnCompletionListener(this);
-        player.setOnErrorListener(this);
     }
 
 
@@ -84,9 +72,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public void playSong() throws IOException {
         player.reset();
         Song playSong = songs.get(currentPosition);
-        long currSong = playSong.getId();
+        long currentSong = playSong.getId();
 
-        Uri trackUri = Uri.parse("android.resource://lab.swim.pwr.android_zad4/raw/aa" + currSong);
+        Uri trackUri = Uri.parse("android.resource://lab.swim.pwr.android_zad4/raw/aa" + currentSong);
 
         player.setDataSource(getApplicationContext(), trackUri);
 
@@ -109,8 +97,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         player.pause();
     }
 
-    public void seek(int posn) {
-        player.seekTo(posn);
+    public void seek(int position) {
+        player.seekTo(position);
     }
 
     public void go() {
